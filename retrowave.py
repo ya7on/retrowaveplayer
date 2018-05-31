@@ -1,8 +1,9 @@
 import requests
 import vlc
 from random import randint
-from datetime import timedelta
+from datetime import timedelta, datetime
 from sys import stdout
+import os
 
 class RetroWaveRadio:
     current_track = {}
@@ -14,12 +15,15 @@ class RetroWaveRadio:
         self.INSTANCE = vlc.Instance(['-q'])
         self.PLAYER = self.INSTANCE.media_player_new()
 
+        print("\033[31mS T A R T I N G\033[0m")
+        self.newTrack()
         while self.playlist:
-            if self.PLAYER.get_position() in (1.0, -1.0):
-                stdout.write("\r%s\n" % self.output() )
+            if round( self.PLAYER.get_position() , 3 ) >= 0.999:
+                stdout.write( "\r%s" % ( " " * int( os.popen('stty size', 'r').read().split()[1] ) ) )
+                stdout.write( "\r[%s]\033[104m%s\033[0m\n" % ( datetime.now().strftime('%x'), self.current_track['title'] ) )
                 self.newTrack()
                 continue
-            stdout.write("\rNOW PLAYING: %s" % self.output() )
+            stdout.write("\rNOW PLAYING:\t%s" % self.output() )
     
     def newTrack(self):
         """turns on next track"""
@@ -31,7 +35,7 @@ class RetroWaveRadio:
     def output(self):
         """formatting output"""
         if not self.current_track:
-            return "\033[31mS T A R T I N G\033[0m"
+            return "\033[31mL O A D I N G\033[0m"
         return "#%s %s \033[45m%s\033[0m" % (
             self.current_track['id'][:10],
             self._getTime(),
@@ -49,7 +53,7 @@ class RetroWaveRadio:
         return "%s / %s" % (now_time, length)
     def _randomTrack(self, delete=True):
         """Returns random track from playlist"""
-        i = randint( 0 , len(self.playlist) )
+        i = randint( 0 , len(self.playlist) - 1 )
         track = self.playlist[ i ]
         if delete:
             del self.playlist[ i ]

@@ -1,2 +1,2 @@
 requests
-vlc
+python-vlc

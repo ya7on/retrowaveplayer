@@ -1,4 +1,4 @@
-# `≋≋≋ 🌴 R E T R O W A V E 🐬 P L A Y E R 🌴 ≋≋≋`
+# `≋≋≋🌴R E T R O W A V E 🐬 P L A Y E R🌴≋≋≋`
 
 Simple RETROWAVE player in your terminal
 
